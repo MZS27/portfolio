@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game Design Portfolio — Your Name</title>
+  <style>
+    /* ---------- Basic reset & layout ---------- */
+    :root{
+      --accent:#7c5cff;
+      --muted:#6b7280;
+      --bg:#0f1724;
+      --card:#0b1320;
+      --glass: rgba(255,255,255,0.04);
+      --maxw:1200px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#05060a 0%, #071026 100%);color:#e6eef8}
+    a{color:inherit}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    /* ---------- Nav ---------- */
+    nav{position:fixed;top:12px;left:0;right:0;z-index:60}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);padding:10px 18px;border-radius:12px;margin:0 16px}
+    .brand{font-weight:700;letter-spacing:0.4px}
+    .menu{display:flex;gap:14px;align-items:center}
+    .menu a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:14px}
+    .menu a.active, .menu a:hover{color:var(--accent);background:var(--glass)}
+
+    /* ---------- Hero / Carousel ---------- */
+    .hero{margin-top:76px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
+    .carousel{position:relative;height:60vh;min-height:340px}
+    .slides{height:100%;display:flex;transition:transform 420ms cubic-bezier(.2,.9,.25,1)}
+    .slide{flex:0 0 100%;position:relative;background:#061028;display:flex;align-items:flex-end;padding:28px}
+    .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(.95) saturate(1.03) brightness(.6)}
+    .slide .meta{position:relative;z-index:2;max-width:720px}
+    .tag{display:inline-block;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.45);font-size:13px;color:#cbd5e1}
+    .title{font-size:clamp(22px,4.2vw,40px);margin:12px 0 8px}
+    .lead{color:var(--muted);margin-bottom:12px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#4fa3ff);color:#041028;font-weight:600;text-decoration:none}
+
+    .carousel .controls{position:absolute;left:12px;right:12px;top:12px;display:flex;justify-content:space-between;z-index:5}
+    .dot-row{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;display:flex;gap:8px;z-index:6}
+    .dot{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,0.15);cursor:pointer}
+    .dot.active{background:var(--accent);box-shadow:0 4px 18px rgba(124,92,255,0.18)}
+
+    /* ---------- Sections ---------- */
+    section{padding:48px 16px;border-radius:12px;margin-top:28px}
+    h2.section-title{font-size:20px;margin:0 0 16px}
+
+    /* Projects grid */
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;overflow:hidden}
+    .thumb{height:140px;border-radius:8px;background:#08122a;display:block;position:relative;overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .card h3{margin:10px 0 6px;font-size:16px}
+    .card p{font-size:13px;color:var(--muted);margin:0}
+    .small-link{display:inline-block;margin-top:10px;font-size:13px;color:var(--accent);text-decoration:none}
+
+    /* Blog list */
+    .blog-list{display:flex;flex-direction:column;gap:12px}
+    .post{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;gap:12px;align-items:center}
+    .post .meta{font-size:13px;color:var(--muted)}
+
+    /* About / Contact */
+    .about-grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .avatar{width:100%;max-width:240px;border-radius:12px;overflow:hidden}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:120;padding:20px}
+    .modal{width:100%;max-width:900px;background:#041024;border-radius:12px;padding:18px;box-shadow:0 10px 40px rgba(2,6,23,0.6);}
+    .modal .media{width:100%;height:420px;border-radius:8px;overflow:hidden;background:#000}
+    .modal .close{float:right;cursor:pointer;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02)}
+
+    /* Responsive small screens */
+    @media(max-width:900px){.about-grid{grid-template-columns:1fr}.hero{height:auto}.carousel{height:46vh}.modal .media{height:240px}}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner container">
+      <div class="brand">Your Name — Game Designer</div>
+      <div class="menu" id="site-nav">
+        <a href="#home" class="active">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#blog">Blog</a>
+        <a href="#about">About/Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- HOME / HERO -->
+    <section id="home" class="hero">
+      <div class="carousel" aria-roledescription="carousel">
+        <div class="slides" id="slides">
+          <!-- Slides will be injected by JS for convenience -->
+        </div>
+        <div class="controls">
+          <button id="prev" aria-label="Previous slide">◀</button>
+          <button id="next" aria-label="Next slide">▶</button>
+        </div>
+        <div class="dot-row" id="dots"></div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <p style="color:var(--muted)">Click a project to view details and an optional video demo.</p>
+      <div class="projects-grid" id="projects-grid">
+        <!-- Project cards injected by JS -->
+      </div>
+      <div style="margin-top:14px">
+        <a href="#" id="other-projects" class="small-link">Other projects & smaller prototypes →</a>
+      </div>
+    </section>
+
+    <!-- BLOG -->
+    <section id="blog">
+      <h2 class="section-title">Blog</h2>
+      <div class="blog-list" id="blog-list">
+        <!-- posts injected by JS -->
+      </div>
+    </section>
+
+    <!-- ABOUT / CONTACT -->
+    <section id="about">
+      <h2 class="section-title">About / Contact</h2>
+      <div class="about-grid">
+        <div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div class="avatar"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800&auto=format&fit=crop&s=placeholder" alt="Avatar" style="width:100%;height:100%;object-fit:cover"/></div>
+            <div>
+              <h3 style="margin-top:0">Your Name</h3>
+              <p style="color:var(--muted);margin-top:6px">Game designer & developer focused on mechanical systems, level design, and playful UX. I make small experimental pieces and polished prototypes.</p>
+              <p style="margin-top:12px"><strong>Skills:</strong> Game systems, prototyping, Unity, Godot, design docs, UX for games.</p>
+              <p style="margin-top:6px"><strong>Email:</strong> <a href="mailto:you@example.com" style="color:var(--accent)">you@example.com</a></p>
+            </div>
+          </div>
+          <div style="margin-top:18px">
+            <h4 style="margin-bottom:8px">Short bio</h4>
+            <p style="color:var(--muted)">Write a 2–4 sentence introduction here. Briefly explain your focus, what you enjoy making, and what you're looking for (collaboration, work opportunities, feedback, etc.).</p>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="padding:18px">
+            <h3 style="margin:0">Let's collaborate</h3>
+            <p class="lead" style="margin-top:8px;color:var(--muted)">Send a note, portfolio requests, or a game jam invite.</p>
+            <form id="contact-form" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+              <input name="name" placeholder="Your name" style="padding:10px;border-radius:8px;border:0;background:rgba(255,255,255,0.02);color:inherit" required>
+              <input name="email" placeholder="Your email" style="padding:10px;border-radius:8px;border:0;background:rgba(255,255,255,0.02);color:inherit" required>
+              <textarea name="message" placeholder="Message" rows="4" style="padding:10px;border-radius:8px;border:0;background:rgba(255,255,255,0.02);color:inherit"></textarea>
+              <button type="submit" class="btn">Send</button>
+            </form>
+            <p id="contact-note" style="color:var(--muted);font-size:13px;margin-top:10px;display:none">Thanks — this demo doesn't actually send email. Replace the form action with your email endpoint.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal (project detail) -->
+  <div id="modal-root" style="display:none"></div>
+
+  <script>
+    // ---------- Sample data ----------
+    const slidesData = [
+      {title: 'Skyward Harvest', tag: '3D Platformer', tagline: 'A vertical platformer about launching and timing.', image: 'https://images.unsplash.com/photo-1516455207990-7a41ce80f7ee?q=80&w=1600&auto=format&fit=crop&s=placeholder', projectId:'p1'},
+      {title: 'Neon Alley', tag: 'Top-down Shooter', tagline: 'Twin-stick combat with environmental hazards.', image: 'https://images.unsplash.com/photo-1499084732479-de2c02d45fc4?q=80&w=1600&auto=format&fit=crop&s=placeholder', projectId:'p2'},
+      {title: 'Puzzlewood', tag: 'Puzzle', tagline: 'A small experimental puzzle about sound and paths.', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop&s=placeholder', projectId:'p3'}
+    ];
+
+    const projects = [
+      {id:'p1',title:'Skyward Harvest',thumb:'https://images.unsplash.com/photo-1516455207990-7a41ce80f7ee?q=80&w=800&auto=format&fit=crop&s=placeholder',desc:'Vertical platformer where you use jump boosts to ascend.',youtube:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+      {id:'p2',title:'Neon Alley',thumb:'https://images.unsplash.com/photo-1499084732479-de2c02d45fc4?q=80&w=800&auto=format&fit=crop&s=placeholder',desc:'Top-down twin-stick shooter prototype with destructible cover.',youtube:''},
+      {id:'p3',title:'Puzzlewood',thumb:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800&auto=format&fit=crop&s=placeholder',desc:'Sound-based puzzle prototypes and micro-levels.',youtube:'https://www.youtube.com/embed/dQw4w9WgXcQ'}
+    ];
+
+    const otherProjects = [
+      {title:'One-button Challenge',link:'#'},
+      {title:'Game Jam Entry - "Boxes"',link:'#'},
+      {title:'Tiny Roguelike',link:'#'}
+    ];
+
+    const posts = [
+      {title:'Design notes on jump feel',date:'Aug 3, 2025',excerpt:'A short write-up about tuning jump arcs and air control.'},
+      {title:'How I prototype in a week',date:'Jul 11, 2025',excerpt:'My rapid loop for getting a playable prototype.'}
+    ];
+
+    // ---------- Carousel rendering & behavior ----------
+    const slidesEl = document.getElementById('slides');
+    const dotsEl = document.getElementById('dots');
+    let current = 0;
+
+    function renderSlides(){
+      slidesEl.innerHTML = '';
+      dotsEl.innerHTML = '';
+      slidesData.forEach((s, i)=>{
+        const slide = document.createElement('div'); slide.className='slide';
+        slide.innerHTML = `
+          <img src="${s.image}" alt="${s.title}" loading="lazy"/>
+          <div class="meta">
+            <div class="tag">${s.tag}</div>
+            <div class="title">${s.title}</div>
+            <div class="lead">${s.tagline}</div>
+            <a href="#projects" data-project="${s.projectId}" class="btn">View project</a>
+          </div>`;
+        slidesEl.appendChild(slide);
+
+        const dot = document.createElement('button'); dot.className='dot'; dot.onclick = ()=>goTo(i);
+        if(i===0) dot.classList.add('active');
+        dotsEl.appendChild(dot);
+      });
+    }
+
+    function updateCarousel(){
+      slidesEl.style.transform = `translateX(-${current*100}%)`;
+      Array.from(dotsEl.children).forEach((d, i)=> d.classList.toggle('active', i===current));
+    }
+
+    function goTo(i){ current = (i+slidesData.length)%slidesData.length; updateCarousel(); }
+    document.getElementById('prev').addEventListener('click', ()=> goTo(current-1));
+    document.getElementById('next').addEventListener('click', ()=> goTo(current+1));
+
+    // autoplay
+    let autoplay = setInterval(()=> goTo(current+1), 5200);
+    document.querySelector('.carousel').addEventListener('mouseenter', ()=> clearInterval(autoplay));
+    document.querySelector('.carousel').addEventListener('mouseleave', ()=> autoplay = setInterval(()=> goTo(current+1), 5200));
+
+    // hook "View project" buttons inside slides
+    document.addEventListener('click', (e)=>{
+      const btn = e.target.closest('a[data-project]');
+      if(btn){
+        e.preventDefault(); openProjectModal(btn.dataset.project);
+      }
+    });
+
+    // ---------- Projects grid rendering ----------
+    const grid = document.getElementById('projects-grid');
+    function renderProjects(){
+      grid.innerHTML='';
+      projects.forEach(p=>{
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <a href="#" class="thumb" data-id="${p.id}" aria-label="Open ${p.title}"><img src="${p.thumb}" alt="${p.title}"></a>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <a href="#" class="small-link" data-id="${p.id}">Open →</a>
+        `;
+        grid.appendChild(card);
+      });
+
+      // other projects link
+      document.getElementById('other-projects').addEventListener('click', (ev)=>{
+        ev.preventDefault(); openOtherProjects();
+      });
+
+      // clickable cards
+      grid.addEventListener('click',(e)=>{
+        const id = e.target.closest('[data-id]')?.dataset?.id;
+        if(id){ e.preventDefault(); openProjectModal(id); }
+      });
+    }
+
+    // ---------- Modal logic ----------
+    function openProjectModal(id){
+      const p = projects.find(x=>x.id===id);
+      const root = document.getElementById('modal-root');
+      root.style.display='block';
+      root.innerHTML = `
+        <div class="modal-backdrop" id="modal-backdrop">
+          <div class="modal" role="dialog" aria-modal="true" aria-label="Project ${p.title}">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">${p.title}</h3>
+              <button class="close" id="modal-close">✕</button>
+            </div>
+            <p style="color:var(--muted);margin-top:6px">${p.desc}</p>
+            <div style="margin-top:12px" class="media">
+              ${p.youtube ? `<iframe src="${p.youtube}" style="border:0;width:100%;height:100%;" title="${p.title} video" allowfullscreen></iframe>` : `<img src="${p.thumb}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover">` }
+            </div>
+            <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end">
+              <a href="#" class="small-link" id="open-play">Open build</a>
+              <a href="#" class="small-link">View devlog</a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('modal-backdrop').addEventListener('click', (ev)=>{
+        if(ev.target.id==='modal-backdrop') closeModal();
+      });
+    }
+    function closeModal(){ const root = document.getElementById('modal-root'); root.style.display='none'; root.innerHTML=''; }
+
+    function openOtherProjects(){
+      const root = document.getElementById('modal-root'); root.style.display='block';
+      root.innerHTML = `
+        <div class="modal-backdrop" id="modal-backdrop">
+          <div class="modal">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Other Projects</h3>
+              <button class="close" id="modal-close">✕</button>
+            </div>
+            <div style="margin-top:12px">
+              <ul>
+                ${otherProjects.map(o=>`<li><a href="${o.link}" class="small-link">${o.title}</a></li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('modal-backdrop').addEventListener('click', (ev)=>{ if(ev.target.id==='modal-backdrop') closeModal(); });
+    }
+
+    // ---------- Blog render ----------
+    function renderBlog(){
+      const list = document.getElementById('blog-list'); list.innerHTML='';
+      posts.forEach(p=>{
+        const el = document.createElement('div'); el.className='post';
+        el.innerHTML = `<div style="flex:1"><strong>${p.title}</strong><div class='meta'>${p.date}</div><p style='margin:6px 0 0;color:var(--muted)'>${p.excerpt}</p></div><div style='width:110px;text-align:right'><a href='#' class='small-link'>Read →</a></div>`;
+        list.appendChild(el);
+      });
+    }
+
+    // ---------- Contact form demo ----------
+    document.getElementById('contact-form').addEventListener('submit', (e)=>{
+      e.preventDefault(); document.getElementById('contact-note').style.display='block';
+    });
+
+    // ---------- Nav active highlight & smooth scroll ----------
+    document.querySelectorAll('nav a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault(); document.querySelectorAll('nav a').forEach(x=>x.classList.remove('active')); a.classList.add('active');
+        document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    });
+
+    // ---------- Init ----------
+    renderSlides(); renderProjects(); renderBlog(); updateCarousel();
+
+    // keyboard left/right for carousel
+    window.addEventListener('keydown', (e)=>{ if(e.key==='ArrowLeft') goTo(current-1); if(e.key==='ArrowRight') goTo(current+1); });
+
+  </script>
+</body>
+</html>
